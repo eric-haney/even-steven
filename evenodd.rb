@@ -1,14 +1,13 @@
 
-
 class DrawPile
 
   def initialize
     @deck = []
-#    (1..4).each do
-        (1..20).each do |card_val|
+    (1..4).each do # hearts, diamonds, spades & clubs
+        (1..10).each do |card_val| # ace is one, jacks, queens and kings removed
           @deck << card_val
         end
-#    end
+    end
     @deck.shuffle!
   end
 
