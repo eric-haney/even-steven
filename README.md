@@ -1,4 +1,9 @@
 # even-steven
+
+USAGE: ruby evenodd.rb 1
+
+(the parameter 1 tells the program to play the game once)
+
 Email from Kindergarten math teacher results in a sleepless night:
 
     Today we continued to explore odd and even numbers.  After reading the 
@@ -32,4 +37,5 @@ kings and jokers removed, and aces counting as one.  Shouldn't the symmetry of
 the deck result in equal chances for Even Steven and Odd Todd?
 
 Turns out no!  Odd Todd has the advantage.  The reason is that the players start
-their turns by drawing 2 cards, and the deck is not infinitely large.
+their turns by drawing 2 cards.  The first card has an equal chance of being even
+or odd, and the second card has a slightly higher chance of being opposite.
