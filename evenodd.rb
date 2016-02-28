@@ -52,12 +52,6 @@ class EvenStevenOddTodd
     @even_steven_wins = 0
     @odd_todd_wins = 0
     @draws = 0
-
-    @round_stats = []
-    (1..10).each do |i|
-            puts "i :: #{i}"
-      @round_stats[i] = { even_steven_wins: 0, odd_todd_wins: 0 }
-    end
   end
 
   def play
@@ -69,17 +63,9 @@ class EvenStevenOddTodd
     @players = [even_steven, odd_todd]
     #@players = [odd_todd, even_steven]
 
-    round = 0
     while draw_pile.hasMoreCards do
-      round += 1
       @players.each do |player|
         player.play(draw_pile.draw)
-      end
-      if odd_todd.won_last
-        @round_stats[round][:odd_todd_wins] += 1
-      end
-      if even_steven.won_last
-        @round_stats[round][:even_steven_wins] += 1
       end
     end
 
@@ -100,18 +86,11 @@ class EvenStevenOddTodd
     "#{100.0 * value / (@even_steven_wins + @odd_todd_wins + @draws)}%"
   end
 
-  def report_results
+  def show_results
     puts "\n\n\n"
     puts "Even Steven Wins: #{@even_steven_wins} (#{percent_of_total(@even_steven_wins)})"
     puts "Odd Todd Wins: #{@odd_todd_wins} (#{percent_of_total(@odd_todd_wins)})"
     puts "Draws: #{@draws} (#{percent_of_total(@draws)})"
-    puts "\n\n"
-    @round_stats.each_with_index do |stats, index|
-      if !stats.nil?
-        puts "Round #{index} :: Even Steven Wins :: #{stats[:even_steven_wins]}"
-        puts "Round #{index} :: Odd Todd Wins    :: #{stats[:odd_todd_wins]}"
-      end
-    end
     puts "\n\n"
   end
 end
@@ -119,8 +98,18 @@ end
 
 game = EvenStevenOddTodd.new
 
-ARGV.first.to_i.times do
+times_to_play = ARGV.first.to_i
+exit_message = ""
+
+if (times_to_play < 1)
+  exit_message = "\nTo make the program play more than once, run: ruby evenodd.rb [number of times to play]\n\n"
+  times_to_play = 1
+end
+
+times_to_play.times do
   game.play
 end
 
-game.report_results
+game.show_results
+
+puts exit_message
