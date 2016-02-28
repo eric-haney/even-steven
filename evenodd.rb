@@ -26,42 +26,35 @@ end
 
 
 class Player
-  attr_reader :score, :name, :won_last
+  attr_reader :name
+  attr_accessor :score, :wins
 
   def initialize (player_name, even_or_odd)
     @name = player_name
     @winning_remainder = even_or_odd == :even ? 0 : 1
     @score = 0
+    @wins = 0
   end
 
   def play(cards)
     puts "#{@name}'s cards: #{cards} "
-    @won_last = false
     if @winning_remainder == (cards.reduce(:+) % 2)
       @score += 1
-      @won_last = true
       puts "                         - WIN!!"
     end
   end
 end
 
 
-class EvenStevenOddTodd
+class EvenStevenOddToddGame
 
   def initialize
-    @even_steven_wins = 0
-    @odd_todd_wins = 0
     @draws = 0
+    @players = [Player.new("Even Steven", :even), Player.new("Odd Todd", :odd)]
   end
 
   def play
     draw_pile = DrawPile.new
-
-    even_steven = Player.new("Even Steven", :even)
-    odd_todd = Player.new("Odd Todd", :odd)
-
-    @players = [even_steven, odd_todd]
-    #@players = [odd_todd, even_steven]
 
     while draw_pile.hasMoreCards do
       @players.each do |player|
@@ -69,34 +62,57 @@ class EvenStevenOddTodd
       end
     end
 
+    show_scores
+
+    tally_wins
+
+    reset_scores
+  end
+
+  def show_scores
+    puts "\nScores:"
     @players.each do |player|
       puts "#{player.name}: #{player.score}"
     end
+    puts "\n"
+  end
 
-    if odd_todd.score > even_steven.score
-      @odd_todd_wins += 1
-    elsif odd_todd.score < even_steven.score
-      @even_steven_wins += 1
+  def tally_wins
+    if @players[0].score > @players[1].score
+      @players[0].wins += 1
+    elsif @players[0].score < @players[1].score
+      @players[1].wins += 1
     else
       @draws += 1
     end
   end
 
+  def reset_scores
+    @players.each do |player|
+      player.score = 0
+    end
+  end
+
   def percent_of_total(value)
-    "#{100.0 * value / (@even_steven_wins + @odd_todd_wins + @draws)}%"
+    total_games = @draws + @players.map{ |player| player.wins }.reduce(:+)
+    "#{100.0 * value / (total_games)}%"
   end
 
   def show_results
-    puts "\n\n\n"
-    puts "Even Steven Wins: #{@even_steven_wins} (#{percent_of_total(@even_steven_wins)})"
-    puts "Odd Todd Wins: #{@odd_todd_wins} (#{percent_of_total(@odd_todd_wins)})"
+    total_games = @draws
+    @players.each do |player|
+      total_games += player.wins
+      puts "#{player.name} Wins: #{player.wins} (#{percent_of_total(player.wins)})"
+    end
     puts "Draws: #{@draws} (#{percent_of_total(@draws)})"
+    puts "===================================="
+    puts "Total Games Played: #{total_games}"
     puts "\n\n"
   end
 end
 
 
-game = EvenStevenOddTodd.new
+game = EvenStevenOddToddGame.new
 
 times_to_play = ARGV.first.to_i
 exit_message = ""
