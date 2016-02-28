@@ -95,7 +95,7 @@ class EvenStevenOddToddGame
 
   def percent_of_total(value)
     total_games = @draws + @players.map{ |player| player.wins }.reduce(:+)
-    "#{100.0 * value / (total_games)}%"
+    "#{(100.0 * value / (total_games)).round(2)}%"
   end
 
   def show_results
